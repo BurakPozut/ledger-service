@@ -11,8 +11,6 @@ import com.ledger.ledger_service.entity.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, UUID> {
 
-  List<Account> findAll();
-
   List<Account> findByCurrency(String currency);
 
   List<Account> findByNameContainingIgnoreCase(String name);
