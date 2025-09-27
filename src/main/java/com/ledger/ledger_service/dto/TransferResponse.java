@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class TransferResponse {
-  
+
   private UUID transferId;
   private UUID sourceAccountId;
   private UUID targetAccountId;
@@ -18,39 +18,91 @@ public class TransferResponse {
   private OffsetDateTime createdAt;
   private OffsetDateTime updatedAt;
 
-  public TransferResponse(){}
+  public TransferResponse() {
+  }
 
-  public UUID getTransferId(){ return transferId; }
-  public void setTransferId(UUID transferId){ this.transferId = transferId; }
+  public UUID getTransferId() {
+    return transferId;
+  }
 
-  public UUID getSourceAccountId(){ return sourceAccountId; }
-  public void setSourceAccountId(UUID sourceAccountId){ this.sourceAccountId = sourceAccountId; }
+  public void setTransferId(UUID transferId) {
+    this.transferId = transferId;
+  }
 
-  public UUID getTargetAccountId(){ return targetAccountId; }
-  public void setTargetAccountId(UUID targetAccountId){ this.targetAccountId = targetAccountId; }
+  public UUID getSourceAccountId() {
+    return sourceAccountId;
+  }
 
-  public BigDecimal getAmount(){ return amount; }
-  public void setAmount(BigDecimal amount){ this.amount = amount; }
+  public void setSourceAccountId(UUID sourceAccountId) {
+    this.sourceAccountId = sourceAccountId;
+  }
 
-  public String getCurrency(){ return currency;}
-  public void setCurrency(String currency){ this.currency = currency; }
+  public UUID getTargetAccountId() {
+    return targetAccountId;
+  }
 
-  public String getStatus(){ return status; }
-  public void setStatus(String status){ this.status = status; }
+  public void setTargetAccountId(UUID targetAccountId) {
+    this.targetAccountId = targetAccountId;
+  }
 
-  public String getClientRequestId(){ return clientRequestId; }
-  public void setClientRequestId(String clientRequestId) {this.clientRequestId = clientRequestId; }
+  public BigDecimal getAmount() {
+    return amount;
+  }
 
-  public String getReason(){ return reason; }
-  public void setReason(String reason){ this.reason = reason; }
+  public void setAmount(BigDecimal amount) {
+    this.amount = amount;
+  }
 
-  public String getFailureCode(){ return failureCode; }
-  public void setFailureCode(String failureCode){ this.failureCode = failureCode; }
+  public String getCurrency() {
+    return currency;
+  }
 
-  public OffsetDateTime getCreatedAt(){ return createdAt; }
-  public void setCreatdAt(OffsetDateTime createdAt){ this.createdAt = createdAt; }
+  public void setCurrency(String currency) {
+    this.currency = currency;
+  }
 
-  public OffsetDateTime getUpdateAt(){ return updatedAt;}
+  public String getStatus() {
+    return status;
+  }
 
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getClientRequestId() {
+    return clientRequestId;
+  }
+
+  public void setClientRequestId(String clientRequestId) {
+    this.clientRequestId = clientRequestId;
+  }
+
+  public String getReason() {
+    return reason;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
+
+  public String getFailureCode() {
+    return failureCode;
+  }
+
+  public void setFailureCode(String failureCode) {
+    this.failureCode = failureCode;
+  }
+
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
 
 }
