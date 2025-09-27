@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ledger.ledger_service.entity.Account;
 import com.ledger.ledger_service.service.AccountService;
 
-
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
-  
+
   @Autowired
   private AccountService accountService;
 
@@ -30,11 +29,11 @@ public class AccountController {
   }
 
   @GetMapping("/{accountID}")
-  public ResponseEntity<Account> getAccountById(@PathVariable UUID accountId){
+  public ResponseEntity<Account> getAccountById(@PathVariable UUID accountId) {
     Optional<Account> account = accountService.getAccountById(accountId);
     return account.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
-  
+
   @GetMapping("/currency/{currency}")
   public ResponseEntity<List<Account>> getAccountsByCurrency(@PathVariable String currency) {
     List<Account> accounts = accountService.getAccountsByCurreny(currency.toUpperCase());
@@ -46,6 +45,7 @@ public class AccountController {
     List<Account> accounts = accountService.getAccountsByName(name);
     return ResponseEntity.ok(accounts);
   }
-  
-  
+
+  // TODO: POST endpoint for creating accounts, GET /{accountId}/transfers
+  // endpoint for getting all the transfers for that account
 }
