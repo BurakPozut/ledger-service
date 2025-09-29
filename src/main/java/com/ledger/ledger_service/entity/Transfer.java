@@ -47,7 +47,6 @@ public class Transfer {
   @Column(name = "failure_code")
   private String failureCode;
 
-  @Version
   @Column(name = "created_at", nullable = false, updatable = false)
   private OffsetDateTime createdAt;
 
@@ -73,6 +72,10 @@ public class Transfer {
     return transferId;
   }
 
+  public void setTransferId(UUID transferId) {
+    this.transferId = transferId;
+  }
+
   public Account getSourceAccount() {
     return sourceAccount;
   }
@@ -85,8 +88,8 @@ public class Transfer {
     return targetAccount;
   }
 
-  public void SetTargetAccount(Account targeAccount) {
-    this.targetAccount = targeAccount;
+  public void SetTargetAccount(Account targetAccount) {
+    this.targetAccount = targetAccount;
   }
 
   public Long getAmountCents() {
@@ -145,11 +148,11 @@ public class Transfer {
     this.createdAt = createdAt;
   }
 
-  public OffsetDateTime getUpdateAt() {
+  public OffsetDateTime getUpdatedAt() {
     return updatedAt;
   }
 
-  public void setUpdateAt(OffsetDateTime updatedAt) {
+  public void setUpdatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
   }
 

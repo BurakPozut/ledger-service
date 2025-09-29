@@ -63,6 +63,10 @@ public class Account {
     this.accountId = accountId;
   }
 
+  public UUID getAccountId() {
+    return accountId;
+  }
+
   public String getName() {
     return name;
   }
