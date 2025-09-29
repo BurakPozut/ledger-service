@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ledger.ledger_service.dto.CreateTransferRequest;
 import com.ledger.ledger_service.dto.TransferResponse;
 import com.ledger.ledger_service.service.TransferService;
-import com.ledger.ledger_service.service.TransferService.TransferException;
 
 import jakarta.validation.Valid;
 
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -30,27 +28,16 @@ public class TransferController {
   @Autowired
   private TransferService transferService;
 
-  // TODO: POST, GET {id}, GET /account/{transferId}, GET /status/{transferId},
-  // GET /status/{status}
-
   @PostMapping
   public ResponseEntity<TransferResponse> createTransfer(@Valid @RequestBody CreateTransferRequest request) {
-    try {
-      TransferResponse response = transferService.createTransfer(request);
-      return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    } catch (TransferException e) {
-      return ResponseEntity.badRequest().build();
-    }
+    TransferResponse response = transferService.createTransfer(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @GetMapping("/{transferId}")
   public ResponseEntity<TransferResponse> getTransferById(@PathVariable UUID transferId) {
-    try {
-      TransferResponse response = transferService.getTransferById(transferId);
-      return ResponseEntity.ok(response);
-    } catch (TransferException e) {
-      return ResponseEntity.notFound().build();
-    }
+    TransferResponse response = transferService.getTransferById(transferId);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/account/{accountId}")
@@ -61,12 +48,8 @@ public class TransferController {
 
   @PutMapping("{transferId}/cancel")
   public ResponseEntity<TransferResponse> cancelTransfer(@PathVariable UUID transferId) {
-    try {
-      TransferResponse response = transferService.cancelTransferById(transferId);
-      return ResponseEntity.ok(response);
-    } catch (TransferException e) {
-      return ResponseEntity.badRequest().build();
-    }
+    TransferResponse response = transferService.cancelTransferById(transferId);
+    return ResponseEntity.ok(response);
   }
 
   // Admin endpoint
@@ -75,5 +58,4 @@ public class TransferController {
     transferService.processPendingTransfers();
     return ResponseEntity.ok("Pending transfers processed");
   }
-
 }

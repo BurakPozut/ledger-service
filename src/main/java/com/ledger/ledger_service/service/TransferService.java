@@ -51,7 +51,7 @@ public class TransferService {
         .findBySourceAccountAccountIdAndClientRequestId(request.getSourceAccountId(), request.getClientRequestId());
 
     if (existingTransfer.isPresent()) {
-      return convertToResponse(existingTransfer.get());
+      throw new TransferException("Transfer with this client request id already exists", FAILURE_DUPLICATE_REQUEST);
     }
 
     // Get Accounts
@@ -81,7 +81,7 @@ public class TransferService {
     } catch (Exception e) {
       savedTransfer.setStatus(STATUS_FAILED);
       savedTransfer
-          .setFailureCode(e instanceof TransferException ? ((TransferException) e).getFailureCore() : "UNKNOWN_ERROR");
+          .setFailureCode(e instanceof TransferException ? ((TransferException) e).getFailureCode() : "UNKNOWN_ERROR");
       savedTransfer.setReason(e.getMessage());
       savedTransfer.setUpdatedAt(OffsetDateTime.now());
       transferRepository.save(savedTransfer);
@@ -129,7 +129,7 @@ public class TransferService {
 
   }
 
-  // TODO: I not sure I did this correctly maybe add transactional at the top?
+  @Transactional
   public TransferResponse cancelTransferById(UUID transferId) {
     Transfer transfer = transferRepository.findById(transferId)
         .orElseThrow(() -> new TransferException("Transfer not found", "TRANSFER_NOT_FOUND"));
@@ -146,7 +146,7 @@ public class TransferService {
       } catch (Exception e) {
         transfer.setStatus(STATUS_FAILED);
         transfer
-            .setFailureCode(e instanceof TransferException ? ((TransferException) e).getFailureCore() : "UNKONW_ERROR");
+            .setFailureCode(e instanceof TransferException ? ((TransferException) e).getFailureCode() : "UNKONW_ERROR");
         transfer.setReason(e.getMessage());
         transfer.setUpdatedAt(OffsetDateTime.now());
         transferRepository.save(transfer);
@@ -215,7 +215,7 @@ public class TransferService {
       this.failureCode = failureCode;
     }
 
-    public String getFailureCore() {
+    public String getFailureCode() {
       return failureCode;
     }
   }

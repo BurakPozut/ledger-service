@@ -29,10 +29,10 @@ public class Account {
   @Column(name = "current_balance_cents", nullable = false)
   private Long currentBalanceCents;
 
+  @Version
   @Column(name = "version", nullable = false)
   private Integer version;
 
-  @Version
   @Column(name = "created_at", nullable = false, updatable = false)
   private OffsetDateTime createdAt;
 
