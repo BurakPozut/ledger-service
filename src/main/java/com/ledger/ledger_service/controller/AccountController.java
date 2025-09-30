@@ -12,8 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ledger.ledger_service.dto.AccountResponse;
+import com.ledger.ledger_service.dto.CreateAccountRequest;
 import com.ledger.ledger_service.entity.Account;
 import com.ledger.ledger_service.service.AccountService;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -46,6 +53,11 @@ public class AccountController {
     return ResponseEntity.ok(accounts);
   }
 
-  // TODO: POST endpoint for creating accounts, GET /{accountId}/transfers
-  // endpoint for getting all the transfers for that account
+  @PostMapping
+  public ResponseEntity<AccountResponse> createAccount(@Valid @RequestBody CreateAccountRequest request) {
+    AccountResponse response = accountService.createAccount(request);
+    return ResponseEntity.ok(response);
+
+  }
+
 }

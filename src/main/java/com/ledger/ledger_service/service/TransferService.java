@@ -27,7 +27,7 @@ public class TransferService {
   @Autowired
   private AccountRepository accountRepository;
 
-  private static final String STATUS_PRENDING = "PENDING";
+  private static final String STATUS_PENDING = "PENDING";
 
   private static final String STATUS_COMPLETED = "COMPLETED";
 
@@ -68,7 +68,7 @@ public class TransferService {
     transfer.SetTargetAccount(targetAccount);
     transfer.setAmountCents(convertToCents(request.getAmount()));
     transfer.setCurrency(request.getCurrency());
-    transfer.setStatus(STATUS_PRENDING);
+    transfer.setStatus(STATUS_PENDING);
     transfer.setClientRequestId(request.getClientRequestId());
     transfer.setReason(request.getReason());
     transfer.setCreatedAt(OffsetDateTime.now());
@@ -91,7 +91,7 @@ public class TransferService {
 
   @Transactional
   public void processTransfer(Transfer transfer) {
-    if (!STATUS_PRENDING.equals(transfer.getStatus())) {
+    if (!STATUS_PENDING.equals(transfer.getStatus())) {
       throw new TransferException("There is not in pending status", "INVALID_STATUS");
     }
 
@@ -138,21 +138,21 @@ public class TransferService {
     return convertToResponse(transfer);
   }
 
-  public TransferResponse processPendingTransfers() {
-    List<Transfer> transfers = transferRepository.findByStatus(STATUS_PRENDING);
+  @Transactional
+  public void processPendingTransfers() {
+    List<Transfer> transfers = transferRepository.findByStatus(STATUS_PENDING);
     transfers.forEach(transfer -> {
       try {
         processTransfer(transfer);
       } catch (Exception e) {
         transfer.setStatus(STATUS_FAILED);
         transfer
-            .setFailureCode(e instanceof TransferException ? ((TransferException) e).getFailureCode() : "UNKONW_ERROR");
+            .setFailureCode(e instanceof TransferException ? ((TransferException) e).getFailureCode() : "UNKOWN_ERROR");
         transfer.setReason(e.getMessage());
         transfer.setUpdatedAt(OffsetDateTime.now());
         transferRepository.save(transfer);
       }
     });
-    return null;
   }
 
   private void validateTransferRequest(CreateTransferRequest request) {
