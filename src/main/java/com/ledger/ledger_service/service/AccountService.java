@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ledger.ledger_service.dto.AccountResponse;
 import com.ledger.ledger_service.dto.CreateAccountRequest;
@@ -37,7 +36,6 @@ public class AccountService {
     return accountRepository.findByNameContainingIgnoreCase(name);
   }
 
-  @Transactional
   public AccountResponse createAccount(CreateAccountRequest request) {
     validateAccountRequest(request);
 
