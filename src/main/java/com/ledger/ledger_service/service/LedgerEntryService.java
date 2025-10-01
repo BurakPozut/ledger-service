@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ledger.ledger_service.dto.BalanceHistoryResponse;
-import com.ledger.ledger_service.dto.LedgerEntryResponse;
-import com.ledger.ledger_service.dto.LedgerSummaryResponse;
-import com.ledger.ledger_service.dto.ReconciliationResponse;
+import com.ledger.ledger_service.dto.Reponse.BalanceHistoryResponse;
+import com.ledger.ledger_service.dto.Reponse.LedgerEntryResponse;
+import com.ledger.ledger_service.dto.Reponse.LedgerSummaryResponse;
+import com.ledger.ledger_service.dto.Reponse.ReconciliationResponse;
 import com.ledger.ledger_service.entity.Account;
 import com.ledger.ledger_service.entity.LedgerEntry;
 import com.ledger.ledger_service.entity.Transfer;

@@ -10,10 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ledger.ledger_service.dto.BalanceHistoryResponse;
-import com.ledger.ledger_service.dto.LedgerEntryResponse;
-import com.ledger.ledger_service.dto.LedgerSummaryResponse;
-import com.ledger.ledger_service.dto.ReconciliationResponse;
+import com.ledger.ledger_service.dto.Reponse.BalanceHistoryResponse;
+import com.ledger.ledger_service.dto.Reponse.LedgerEntryResponse;
+import com.ledger.ledger_service.dto.Reponse.LedgerSummaryResponse;
+import com.ledger.ledger_service.dto.Reponse.ReconciliationResponse;
 import com.ledger.ledger_service.service.LedgerEntryService;
 
 import org.springframework.web.bind.annotation.GetMapping;

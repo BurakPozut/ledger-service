@@ -9,8 +9,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ledger.ledger_service.dto.AccountResponse;
-import com.ledger.ledger_service.dto.CreateAccountRequest;
+import com.ledger.ledger_service.dto.Reponse.AccountResponse;
+import com.ledger.ledger_service.dto.Request.CreateAccountRequest;
 import com.ledger.ledger_service.entity.Account;
 import com.ledger.ledger_service.repository.AccountRepository;
 

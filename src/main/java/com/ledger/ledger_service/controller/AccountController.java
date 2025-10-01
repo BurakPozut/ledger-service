@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ledger.ledger_service.dto.AccountResponse;
-import com.ledger.ledger_service.dto.CreateAccountRequest;
+import com.ledger.ledger_service.dto.Reponse.AccountResponse;
+import com.ledger.ledger_service.dto.Request.CreateAccountRequest;
 import com.ledger.ledger_service.entity.Account;
 import com.ledger.ledger_service.service.AccountService;
 

@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ledger.ledger_service.dto.CreateTransferRequest;
-import com.ledger.ledger_service.dto.TransferResponse;
+import com.ledger.ledger_service.dto.Reponse.TransferResponse;
+import com.ledger.ledger_service.dto.Request.CreateTransferRequest;
 import com.ledger.ledger_service.service.TransferService;
 
 import jakarta.validation.Valid;

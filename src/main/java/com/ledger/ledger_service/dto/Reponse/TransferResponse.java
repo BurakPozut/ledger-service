@@ -1,43 +1,32 @@
-package com.ledger.ledger_service.dto;
+package com.ledger.ledger_service.dto.Reponse;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+public class TransferResponse {
 
-public class CreateTransferRequest {
-
-  @NotNull(message = "Source account ID is required")
+  private UUID transferId;
   private UUID sourceAccountId;
-  @NotNull(message = "Target account ID is required")
   private UUID targetAccountId;
-
-  @NotNull(message = "Amount is required")
-  @DecimalMin(value = "0.01", message = "Amount must be greated than 0")
   private BigDecimal amount;
-
-  @NotBlank(message = "Currency is required")
-  @Pattern(regexp = "^[A-Z]{3}$", message = "Currency must be a 3-letter uppercase code")
   private String currency;
-
-  @NotBlank(message = "Client request ID is required")
+  private String status;
   private String clientRequestId;
-
   private String reason;
+  private String failureCode;
+  private OffsetDateTime createdAt;
+  private OffsetDateTime updatedAt;
 
-  public CreateTransferRequest() {
+  public TransferResponse() {
   }
 
-  public CreateTransferRequest(UUID sourceAccountId, UUID targetAccountId, BigDecimal amount, String currency,
-      String clientRequestId) {
-    this.sourceAccountId = sourceAccountId;
-    this.targetAccountId = targetAccountId;
-    this.amount = amount;
-    this.currency = currency;
-    this.clientRequestId = clientRequestId;
+  public UUID getTransferId() {
+    return transferId;
+  }
+
+  public void setTransferId(UUID transferId) {
+    this.transferId = transferId;
   }
 
   public UUID getSourceAccountId() {
@@ -72,6 +61,14 @@ public class CreateTransferRequest {
     this.currency = currency;
   }
 
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
   public String getClientRequestId() {
     return clientRequestId;
   }
@@ -86,6 +83,30 @@ public class CreateTransferRequest {
 
   public void setReason(String reason) {
     this.reason = reason;
+  }
+
+  public String getFailureCode() {
+    return failureCode;
+  }
+
+  public void setFailureCode(String failureCode) {
+    this.failureCode = failureCode;
+  }
+
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public OffsetDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(OffsetDateTime updatedAt) {
+    this.updatedAt = updatedAt;
   }
 
 }

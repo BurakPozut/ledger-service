@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ledger.ledger_service.dto.CreateTransferRequest;
-import com.ledger.ledger_service.dto.TransferResponse;
+import com.ledger.ledger_service.dto.Reponse.TransferResponse;
+import com.ledger.ledger_service.dto.Request.CreateTransferRequest;
 import com.ledger.ledger_service.entity.Account;
 import com.ledger.ledger_service.entity.Transfer;
 import com.ledger.ledger_service.repository.AccountRepository;

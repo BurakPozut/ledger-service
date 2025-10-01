@@ -1,4 +1,4 @@
-package com.ledger.ledger_service.dto;
+package com.ledger.ledger_service.dto.Request;
 
 import java.math.BigDecimal;
 
