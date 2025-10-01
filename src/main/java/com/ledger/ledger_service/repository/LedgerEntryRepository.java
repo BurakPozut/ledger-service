@@ -15,7 +15,7 @@ import com.ledger.ledger_service.entity.LedgerEntry;
 public interface LedgerEntryRepository extends JpaRepository<LedgerEntry, UUID> {
   List<LedgerEntry> findByAccountAccountId(UUID accountId);
 
-  List<LedgerEntry> findByTransferTransferId(UUID transferID);
+  List<LedgerEntry> findByTransferTransferId(UUID transferId);
 
   List<LedgerEntry> findByAccountAccountIdAndOccurredAtBetween(
       UUID accountId, OffsetDateTime fromDate, OffsetDateTime toDate);
@@ -42,4 +42,9 @@ public interface LedgerEntryRepository extends JpaRepository<LedgerEntry, UUID> 
   List<LedgerEntry> findByCurrency(String currency);
 
   List<LedgerEntry> findByCurrencyAndOccurredAtBetween(String currency, OffsetDateTime fromDate, OffsetDateTime toDate);
+
+  @Query("SELECT le FROM LedgerEntry le WHERE le.occurredAt BETWEEN :fromDate AND :toDate ORDER BY le.occurredAt ASC")
+  List<LedgerEntry> findByOccurredAtBetween(
+      @Param("fromDate") OffsetDateTime fromDate,
+      @Param("toDate") OffsetDateTime toDate);
 }
