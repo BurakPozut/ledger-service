@@ -27,6 +27,9 @@ public class TransferService {
   @Autowired
   private AccountRepository accountRepository;
 
+  @Autowired
+  private LedgerEntryService ledgerEntryService;
+
   private static final String STATUS_PENDING = "PENDING";
 
   private static final String STATUS_COMPLETED = "COMPLETED";
@@ -110,6 +113,8 @@ public class TransferService {
     // Update accounts
     accountRepository.save(sourceAccount);
     accountRepository.save(targetAccount);
+
+    ledgerEntryService.createLedgerEntries(transfer, sourceAccount, targetAccount);
 
     // Update Transfer status
     transfer.setStatus(STATUS_COMPLETED);
