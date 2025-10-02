@@ -18,6 +18,10 @@ import com.ledger.ledger_service.entity.Transfer;
 import com.ledger.ledger_service.repository.AccountRepository;
 import com.ledger.ledger_service.repository.TransferRepository;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+
 @Service
 public class TransferService {
 
@@ -45,6 +49,11 @@ public class TransferService {
   private static final String FAILURE_DUPLICATE_REQUEST = "DUPLICATE_REQUEST";
   private static final String FAILURE_INVALID_AMOUNT = "INVALID_AMOUNT";
 
+  // This is for demonstration purposes normally we need to put circuit breaking
+  // when we are making calling other microservices or message queues etc.
+  @CircuitBreaker(name = "transferService", fallbackMethod = "createTransferFallback")
+  @Retry(name = "transferService")
+  @TimeLimiter(name = "transferService")
   @Transactional
   public TransferResponse createTransfer(CreateTransferRequest request) {
     validateTransferRequest(request);
@@ -92,7 +101,22 @@ public class TransferService {
     return convertToResponse(savedTransfer);
   }
 
-  @Transactional
+  public TransferResponse createTransferFallback(CreateTransferRequest request, Exception ex) {
+    TransferResponse response = new TransferResponse();
+    response.setTransferId(UUID.randomUUID());
+    response.setSourceAccountId(request.getSourceAccountId());
+    response.setTargetAccountId(request.getTargetAccountId());
+    response.setAmount(request.getAmount());
+    response.setCurrency(request.getCurrency());
+    response.setStatus(STATUS_FAILED);
+    response.setClientRequestId(request.getClientRequestId());
+    response.setReason("Service temporarily unavailable due to circuit breaker");
+    response.setFailureCode("CIRCUIT_BREAKER_OPEN");
+    response.setCreatedAt(OffsetDateTime.now());
+    response.setUpdatedAt(OffsetDateTime.now());
+    return response;
+  }
+
   public void processTransfer(Transfer transfer) {
     if (!STATUS_PENDING.equals(transfer.getStatus())) {
       throw new TransferException("There is not in pending status", "INVALID_STATUS");
