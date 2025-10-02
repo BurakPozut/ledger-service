@@ -30,7 +30,7 @@ public class TransferController {
 
   @PostMapping
   public ResponseEntity<TransferResponse> createTransfer(@Valid @RequestBody CreateTransferRequest request) {
-    TransferResponse response = transferService.createTransfer(request);
+    TransferResponse response = transferService.executeTransfer(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 

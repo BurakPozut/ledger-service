@@ -5,8 +5,10 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +21,8 @@ import com.ledger.ledger_service.repository.AccountRepository;
 import com.ledger.ledger_service.repository.TransferRepository;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.retry.Retry;
+import io.github.resilience4j.retry.RetryRegistry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 
 @Service
@@ -33,6 +36,9 @@ public class TransferService {
 
   @Autowired
   private LedgerEntryService ledgerEntryService;
+
+  @Autowired
+  private RetryRegistry retryRegistry;
 
   private static final String STATUS_PENDING = "PENDING";
 
@@ -52,10 +58,27 @@ public class TransferService {
   // This is for demonstration purposes normally we need to put circuit breaking
   // when we are making calling other microservices or message queues etc.
   @CircuitBreaker(name = "transferService", fallbackMethod = "createTransferFallback")
-  @Retry(name = "transferService")
   @TimeLimiter(name = "transferService")
   @Transactional
   public TransferResponse createTransfer(CreateTransferRequest request) {
+    Retry retry = retryRegistry.retry("transferService");
+
+    Supplier<TransferResponse> decoreatedSupplier = Retry.decorateSupplier(
+        retry,
+        () -> executeTransfer(request));
+
+    try {
+      return decoreatedSupplier.get();
+    } catch (Exception e) {
+      if (e instanceof OptimisticEntityLockException) {
+        throw new TransferException("Trasnfer failed after retries due to concurrent updates",
+            "CONCURRENT_UPDATE_FAILED");
+      }
+      throw e;
+    }
+  }
+
+  public TransferResponse executeTransfer(CreateTransferRequest request) {
     validateTransferRequest(request);
 
     // Check for duplicate requests (idempotency)

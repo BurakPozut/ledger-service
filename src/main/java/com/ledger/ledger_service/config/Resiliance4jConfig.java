@@ -2,8 +2,11 @@ package com.ledger.ledger_service.config;
 
 import java.time.Duration;
 
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.ledger.ledger_service.service.TransferService.TransferException;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
@@ -67,7 +70,9 @@ public class Resiliance4jConfig {
     RetryConfig config = RetryConfig.custom()
         .maxAttempts(3)
         .waitDuration(Duration.ofSeconds(1))
-        .retryExceptions(Exception.class)
+        .retryExceptions(Exception.class, OptimisticEntityLockException.class)
+        .ignoreExceptions(TransferException.class) // We added this cause we should't retry when ther is a business
+                                                   // logic error
         .build();
 
     return retryRegistry.retry("transferService", config);
