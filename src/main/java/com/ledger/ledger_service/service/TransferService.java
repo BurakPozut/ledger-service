@@ -34,8 +34,10 @@ public class TransferService {
   @Autowired
   private AccountRepository accountRepository;
 
+  // @Autowired
+  // private LedgerEntryService ledgerEntryService;
   @Autowired
-  private LedgerEntryService ledgerEntryService;
+  private EventPublisherService eventPublisherService;
 
   @Autowired
   private RetryRegistry retryRegistry;
@@ -111,6 +113,15 @@ public class TransferService {
 
     Transfer savedTransfer = transferRepository.save(transfer);
 
+    eventPublisherService.publishTransferCreated(
+        savedTransfer.getTransferId(),
+        savedTransfer.getSourceAccount().getAccountId(),
+        savedTransfer.getTargetAccount().getAccountId(),
+        request.getAmount(),
+        request.getCurrency(),
+        request.getClientRequestId(),
+        request.getReason());
+
     try {
       processTransfer(savedTransfer);
     } catch (Exception e) {
@@ -120,6 +131,16 @@ public class TransferService {
       savedTransfer.setReason(e.getMessage());
       savedTransfer.setUpdatedAt(OffsetDateTime.now());
       transferRepository.save(savedTransfer);
+
+      eventPublisherService.publishTransferProcessed(
+          savedTransfer.getTransferId(),
+          savedTransfer.getSourceAccount().getAccountId(),
+          savedTransfer.getTargetAccount().getAccountId(),
+          request.getAmount(),
+          request.getCurrency(),
+          STATUS_FAILED,
+          request.getClientRequestId(),
+          e.getMessage());
     }
     return convertToResponse(savedTransfer);
   }
@@ -161,12 +182,44 @@ public class TransferService {
     accountRepository.save(sourceAccount);
     accountRepository.save(targetAccount);
 
-    ledgerEntryService.createLedgerEntries(transfer, sourceAccount, targetAccount);
+    // ledgerEntryService.createLedgerEntries(transfer, sourceAccount,
+    // targetAccount);
+
+    BigDecimal changeAmount = convertFromCents(transfer.getAmountCents());
+    BigDecimal previousbalance = convertFromCents(sourceAccount.getCurrentBalanceCents() + transfer.getAmountCents());
+    BigDecimal targetPreviousBalance = convertFromCents(
+        targetAccount.getCurrentBalanceCents() - transfer.getAmountCents());
+
+    eventPublisherService.publishAccountBalanceUpdate(
+        sourceAccount.getAccountId(),
+        previousbalance,
+        sourceAccount.getCurrentBalance(),
+        changeAmount.negate(),
+        transfer.getCurrency(),
+        transfer.getTransferId());
+
+    eventPublisherService.publishAccountBalanceUpdate(
+        targetAccount.getAccountId(),
+        targetPreviousBalance,
+        targetAccount.getCurrentBalance(),
+        changeAmount,
+        transfer.getCurrency(),
+        transfer.getTransferId());
 
     // Update Transfer status
     transfer.setStatus(STATUS_COMPLETED);
     transfer.setUpdatedAt(OffsetDateTime.now());
     transferRepository.save(transfer);
+
+    eventPublisherService.publishTransferProcessed(
+        transfer.getTransferId(),
+        transfer.getSourceAccount().getAccountId(),
+        transfer.getTargetAccount().getAccountId(),
+        convertFromCents(transfer.getAmountCents()),
+        transfer.getCurrency(),
+        STATUS_COMPLETED,
+        transfer.getClientRequestId(),
+        transfer.getReason());
   }
 
   public TransferResponse getTransferById(UUID transferId) {

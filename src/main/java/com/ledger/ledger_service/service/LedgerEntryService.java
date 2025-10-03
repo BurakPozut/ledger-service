@@ -20,7 +20,7 @@ import com.ledger.ledger_service.dto.Reponse.LedgerSummaryResponse;
 import com.ledger.ledger_service.dto.Reponse.ReconciliationResponse;
 import com.ledger.ledger_service.entity.Account;
 import com.ledger.ledger_service.entity.LedgerEntry;
-import com.ledger.ledger_service.entity.Transfer;
+// import com.ledger.ledger_service.entity.Transfer;
 import com.ledger.ledger_service.repository.AccountRepository;
 import com.ledger.ledger_service.repository.LedgerEntryRepository;
 
@@ -118,35 +118,36 @@ public class LedgerEntryService {
     return calculateLedgerSummary(entries, currency, fromDate, toDate);
   }
 
-  @Transactional
-  public void createLedgerEntries(Transfer transfer, Account sourceAccount, Account targerAccount) {
-    OffsetDateTime now = OffsetDateTime.now();
+  // @Transactional
+  // public void createLedgerEntries(Transfer transfer, Account sourceAccount,
+  // Account targerAccount) {
+  // OffsetDateTime now = OffsetDateTime.now();
 
-    // Debit Entry for source account
-    LedgerEntry debitEntry = new LedgerEntry();
-    debitEntry.setLedgerEntryId(UUID.randomUUID());
-    debitEntry.setAccount(sourceAccount);
-    debitEntry.setTransfer(transfer);
-    debitEntry.setDirection("DEBIT");
-    debitEntry.setAmountCents(transfer.getAmountCents());
-    debitEntry.setCurrency(transfer.getCurrency());
-    debitEntry.setOccurredAt(now);
-    debitEntry.setCreatedAt(now);
+  // // Debit Entry for source account
+  // LedgerEntry debitEntry = new LedgerEntry();
+  // debitEntry.setLedgerEntryId(UUID.randomUUID());
+  // debitEntry.setAccount(sourceAccount);
+  // debitEntry.setTransfer(transfer);
+  // debitEntry.setDirection("DEBIT");
+  // debitEntry.setAmountCents(transfer.getAmountCents());
+  // debitEntry.setCurrency(transfer.getCurrency());
+  // debitEntry.setOccurredAt(now);
+  // debitEntry.setCreatedAt(now);
 
-    // Credit entry for targer account
-    LedgerEntry creditEntry = new LedgerEntry();
-    creditEntry.setLedgerEntryId(UUID.randomUUID());
-    creditEntry.setAccount(targerAccount);
-    creditEntry.setTransfer(transfer);
-    creditEntry.setDirection("CREDIT");
-    creditEntry.setAmountCents(transfer.getAmountCents());
-    creditEntry.setCurrency(transfer.getCurrency());
-    creditEntry.setOccurredAt(now);
-    creditEntry.setCreatedAt(now);
+  // // Credit entry for targer account
+  // LedgerEntry creditEntry = new LedgerEntry();
+  // creditEntry.setLedgerEntryId(UUID.randomUUID());
+  // creditEntry.setAccount(targerAccount);
+  // creditEntry.setTransfer(transfer);
+  // creditEntry.setDirection("CREDIT");
+  // creditEntry.setAmountCents(transfer.getAmountCents());
+  // creditEntry.setCurrency(transfer.getCurrency());
+  // creditEntry.setOccurredAt(now);
+  // creditEntry.setCreatedAt(now);
 
-    ledgerEntryRepository.save(debitEntry);
-    ledgerEntryRepository.save(creditEntry);
-  }
+  // ledgerEntryRepository.save(debitEntry);
+  // ledgerEntryRepository.save(creditEntry);
+  // }
 
   private LedgerEntryResponse convertToResponse(LedgerEntry entry) {
     LedgerEntryResponse response = new LedgerEntryResponse();
